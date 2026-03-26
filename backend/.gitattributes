@@ -1,0 +1,5 @@
+# Treat binary files correctly so git doesn't corrupt them with CRLF conversion
+*.pdf binary
+*.pkl binary
+*.npy binary
+*.joblib binary

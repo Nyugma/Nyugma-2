@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: legal-case-similarity-api
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && python -c \"import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('wordnet')\""
+    startCommand: "python uvicorn_production.py"
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 8000
+      - key: LOG_LEVEL
+        value: warning
+      # IMPORTANT: Update CORS_ORIGINS with your actual frontend URL after deployment
+      # For now, "*" allows all origins (fine for testing, restrict for production)
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: FRONTEND_URL
+        value: https://your-frontend.vercel.app
+      - key: PYTHON_VERSION
+        value: "3.11.0"

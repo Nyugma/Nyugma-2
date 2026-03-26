@@ -45,10 +45,9 @@ logs/*.log
 *.log
 
 # Data files
-data/cases/*.pdf
-data/vectors/*.pkl
+# Note: vectorizer_model.pkl, case_vectors.pkl, and case PDFs are intentionally tracked
+# so Render can access pre-trained models without re-training on startup
 data/vectors/*.npy
-*.pkl
 *.joblib
 
 # IDE
