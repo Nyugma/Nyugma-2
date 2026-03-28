@@ -1,0 +1,38 @@
+{
+  "session_id": "1111f94a-1b08-49e8-bba0-bac8992febb9",
+  "user_id": null,
+  "created_at": "2026-02-23T17:32:19.730731",
+  "last_activity": "2026-02-23T17:34:04.577086",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hii",
+      "timestamp": "2026-02-23T17:32:19.732669"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-02-23T17:32:24.162619"
+    },
+    {
+      "role": "user",
+      "content": "How accurate is the case similarity matching?",
+      "timestamp": "2026-02-23T17:32:26.674310"
+    },
+    {
+      "role": "assistant",
+      "content": "The platform uses proven algorithms to ensure a high degree of accuracy in matching. It relies on TF-IDF vectorization and cosine similarity to compare legal documents. This combination accurately finds cases with shared legal terms, laws, and factual patterns, providing results ranked by relevance.",
+      "timestamp": "2026-02-23T17:32:28.732649"
+    },
+    {
+      "role": "user",
+      "content": "How can I upload a pre-existing solved case as a helper to help a new user?",
+      "timestamp": "2026-02-23T17:34:00.820130"
+    },
+    {
+      "role": "assistant",
+      "content": "To upload a pre-existing solved case as a Helper, follow these steps:\n\n1. Log in to the platform as a Helper.\n2. Click on the \"Add Case\" link in the navigation menu.\n3. You will be directed to the Helper Dashboard designed for managing and adding new cases.\n4. Fill out the Case Submission Form with details about the case.\n5. Upload the corresponding PDF document(s) related to the solved case.\n6. Once submitted, your case will be added to the platform's database and can help New Litigants find similar cases and connect with you for assistance.",
+      "timestamp": "2026-02-23T17:34:04.577086"
+    }
+  ]
+}

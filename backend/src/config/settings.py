@@ -51,5 +51,15 @@ class Settings:
     MIN_REPOSITORY_SIZE: int = 500
     MAX_REPOSITORY_SIZE: int = 1000
 
+    # Chat / RAG settings
+    CHAT_SESSIONS_DIR: Path = DATA_DIR / "chat_sessions"
+    CHROMADB_DIR: Path = DATA_DIR / "chromadb"
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    MAX_HISTORY_MESSAGES: int = 10
+    MAX_CONTEXT_CHUNKS: int = 5
+    LLM_TEMPERATURE: float = 0.3
+    LLM_MAX_TOKENS: int = 1024
+
 # Global settings instance
 settings = Settings()

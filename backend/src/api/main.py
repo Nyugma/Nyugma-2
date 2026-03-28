@@ -98,6 +98,26 @@ else:
     similarity_engine = None
     logger.warning("No case data available - similarity search will be limited")
 
+# Initialize chat/RAG components
+from src.api.chat_routes import router as chat_router, init_chat_components
+from src.components.chromadb_client import ChromaDBClient
+from src.components.llm_client import LLMClient
+from src.components.session_manager import SessionManager
+from src.components.rag_engine import RAGEngine
+
+try:
+    chat_chromadb_client = ChromaDBClient()
+    chat_llm_client = LLMClient()
+    chat_session_manager = SessionManager()
+    chat_rag_engine = RAGEngine(chat_chromadb_client, chat_llm_client)
+    init_chat_components(chat_chromadb_client, chat_llm_client, chat_session_manager, chat_rag_engine)
+    app.include_router(chat_router)
+    logger.info("Chat/RAG components initialized successfully")
+except Exception as e:
+    logger.warning(f"Failed to initialize chat components: {e}")
+    # Still include the router so the endpoint exists but returns errors
+    app.include_router(chat_router)
+
 
 # Pydantic models for request/response validation
 class SimilarCase(BaseModel):
