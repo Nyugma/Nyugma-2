@@ -1,0 +1,76 @@
+{
+  "navigation_links": [
+    {
+      "id": "home",
+      "page_name": "Home",
+      "route": "/",
+      "description": "The main landing page of the platform with an overview of features and the chatbot.",
+      "keywords": ["home", "main page", "landing", "start", "homepage", "front page", "welcome", "overview"],
+      "roles": ["user", "helper", "admin"]
+    },
+    {
+      "id": "auth",
+      "page_name": "Authentication",
+      "route": "/auth",
+      "description": "Sign in or create a new account to access the platform.",
+      "keywords": ["login", "log in", "sign in", "sign up", "register", "create account", "authentication", "password", "forgot password", "reset password", "credentials"],
+      "roles": ["public"]
+    },
+    {
+      "id": "dashboard",
+      "page_name": "Dashboard",
+      "route": "/dashboard",
+      "description": "Your personal dashboard to view and manage your uploaded cases and documents.",
+      "keywords": ["dashboard", "my cases", "my documents", "upload document", "upload case", "manage cases", "overview", "my files", "case list", "submitted cases"],
+      "roles": ["user", "admin"]
+    },
+    {
+      "id": "helper-dashboard",
+      "page_name": "Helper Dashboard",
+      "route": "/helper-dashboard",
+      "description": "Dashboard for helpers to review assigned cases and manage their workload.",
+      "keywords": ["helper dashboard", "helper", "assigned cases", "review cases", "helper workload", "case review", "helper panel", "volunteer"],
+      "roles": ["helper", "admin"]
+    },
+    {
+      "id": "search",
+      "page_name": "Search",
+      "route": "/search",
+      "description": "Search for similar legal cases using keywords or document content.",
+      "keywords": ["search", "find cases", "find similar cases", "case search", "look up", "search cases", "similarity", "similar cases", "legal search", "query"],
+      "roles": ["user", "helper", "admin"]
+    },
+    {
+      "id": "inquiry",
+      "page_name": "Inquiry",
+      "route": "/inquiry",
+      "description": "Submit a new inquiry or view the status of your existing inquiries.",
+      "keywords": ["inquiry", "submit inquiry", "new inquiry", "ask question", "request help", "inquiry status", "my inquiries", "submit request", "help request"],
+      "roles": ["user", "admin"]
+    },
+    {
+      "id": "connections",
+      "page_name": "Connections",
+      "route": "/connections",
+      "description": "View and manage your connections with helpers and other users on the platform.",
+      "keywords": ["connections", "connect", "my connections", "network", "contacts", "find helpers", "connect with helper", "linked users", "partnerships"],
+      "roles": ["user", "helper", "admin"]
+    },
+    {
+      "id": "messages",
+      "page_name": "Messages",
+      "route": "/messages",
+      "description": "Send and receive messages with your connections and helpers.",
+      "keywords": ["messages", "send message", "inbox", "chat", "conversations", "messaging", "direct message", "communicate", "reply", "message history"],
+      "roles": ["user", "helper", "admin"]
+    },
+    {
+      "id": "admin",
+      "page_name": "Admin",
+      "route": "/admin",
+      "description": "Administration panel to manage users, roles, and platform settings.",
+      "keywords": ["admin", "administration", "manage users", "user management", "settings", "admin panel", "platform settings", "roles", "permissions", "moderate"],
+      "roles": ["admin"]
+    }
+  ]
+}

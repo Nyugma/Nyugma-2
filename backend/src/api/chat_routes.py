@@ -63,11 +63,19 @@ class DocumentSourceResponse(BaseModel):
     relevance_score: float
 
 
+class NavigationLinkResponse(BaseModel):
+    """A navigation link suggestion returned alongside a chat response."""
+    page_name: str
+    route: str
+    description: str
+
+
 class ChatResponse(BaseModel):
     """Successful chat response."""
     session_id: str
     response: str
     sources: List[DocumentSourceResponse]
+    navigation_links: List[NavigationLinkResponse] = []
 
 
 class ChatErrorResponse(BaseModel):
@@ -154,10 +162,20 @@ async def chat(request: ChatRequest) -> ChatResponse:
             for src in rag_result.sources
         ]
 
+        navigation_links = [
+            NavigationLinkResponse(
+                page_name=nav.page_name,
+                route=nav.route,
+                description=nav.description,
+            )
+            for nav in rag_result.navigation_links
+        ]
+
         return ChatResponse(
             session_id=session.session_id,
             response=rag_result.response,
             sources=sources,
+            navigation_links=navigation_links,
         )
 
     except Exception:

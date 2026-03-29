@@ -61,5 +61,8 @@ class Settings:
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_TOKENS: int = 1024
 
+    # Navigation links settings
+    NAVIGATION_LINKS_PATH: Path = DATA_DIR / "navigation_links.json"
+
 # Global settings instance
 settings = Settings()

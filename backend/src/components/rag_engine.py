@@ -6,9 +6,10 @@ Orchestrates retrieval from ChromaDB and response generation via the LLM client.
 
 import logging
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from src.config.settings import settings
+from src.components.navigation_links_store import NavigationLinkEntry
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,7 @@ class RAGResult:
 
     response: str
     sources: List[DocumentSource] = field(default_factory=list)
+    navigation_links: List[NavigationLinkEntry] = field(default_factory=list)
 
 
 class RAGEngine:
@@ -57,12 +59,13 @@ class RAGEngine:
     then calls the LLM to generate a response.
     """
 
-    def __init__(self, chromadb_client, llm_client, max_context_chunks: int = None):
+    def __init__(self, chromadb_client, llm_client, max_context_chunks: int = None, navigation_store=None):
         self.chromadb_client = chromadb_client
         self.llm_client = llm_client
         self.max_context_chunks = (
             max_context_chunks if max_context_chunks is not None else settings.MAX_CONTEXT_CHUNKS
         )
+        self.navigation_store = navigation_store
 
     def generate_response(self, message: str, history: List[dict]) -> RAGResult:
         """Generate a RAG response for the given user message.
@@ -75,7 +78,25 @@ class RAGEngine:
         Returns:
             A RAGResult with the LLM response text and source documents.
         """
-        # 1. Retrieve relevant chunks from ChromaDB
+        # 1. Check navigation store first
+        nav_matches: List[NavigationLinkEntry] = []
+        if self.navigation_store:
+            try:
+                nav_matches = self.navigation_store.search(message)
+            except Exception:
+                logger.exception("NavigationLinksStore search failed, falling back to ChromaDB")
+
+        if nav_matches:
+            # Build prompt with navigation context and call LLM
+            prompt_messages = self._build_nav_prompt(message, history, nav_matches)
+            try:
+                llm_response = self.llm_client.chat(prompt_messages)
+            except Exception:
+                logger.exception("LLM call failed during navigation RAG generation")
+                raise
+            return RAGResult(response=llm_response, navigation_links=nav_matches)
+
+        # 2. Standard ChromaDB RAG path (existing behavior)
         try:
             query_result = self.chromadb_client.query(
                 message, n_results=self.max_context_chunks
@@ -84,13 +105,13 @@ class RAGEngine:
             logger.exception("ChromaDB query failed, returning fallback response")
             return RAGResult(response=FALLBACK_RESPONSE, sources=[])
 
-        # 2. Extract sources from query metadata
+        # 3. Extract sources from query metadata
         sources = self._extract_sources(query_result)
 
-        # 3. Build prompt messages
+        # 4. Build prompt messages
         prompt_messages = self._build_prompt(message, history, query_result)
 
-        # 4. Call LLM
+        # 5. Call LLM
         try:
             llm_response = self.llm_client.chat(prompt_messages)
         except Exception:
@@ -121,6 +142,42 @@ class RAGEngine:
         if has_results:
             context_text = self._format_context(query_result)
             messages.append({"role": "system", "content": context_text})
+
+        # Conversation history
+        for msg in history:
+            messages.append({"role": msg["role"], "content": msg["content"]})
+
+        # Current user message
+        messages.append({"role": "user", "content": message})
+
+        return messages
+
+    def _build_nav_prompt(
+        self, message: str, history: List[dict], nav_matches: List[NavigationLinkEntry]
+    ) -> List[dict]:
+        """Construct the list of messages for a navigation-related query.
+
+        The prompt is structured as:
+        1. System instruction
+        2. Navigation context with matched page names and routes
+        3. Conversation history
+        4. Current user message
+        """
+        messages: List[dict] = []
+
+        # System prompt
+        messages.append({"role": "system", "content": SYSTEM_PROMPT})
+
+        # Navigation context
+        nav_lines = [
+            "The user is asking about navigating the platform. Here are the relevant pages:"
+        ]
+        for match in nav_matches:
+            nav_lines.append(f"{match.page_name} ({match.route}) - {match.description}")
+        nav_lines.append(
+            "Include these page names and routes in your response so the user knows where to go."
+        )
+        messages.append({"role": "system", "content": "\n".join(nav_lines)})
 
         # Conversation history
         for msg in history:

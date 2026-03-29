@@ -21,6 +21,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ValidationError
 import traceback
 
+from src.config.settings import settings
 from src.components.pdf_processor import PDFProcessor
 from src.components.text_preprocessor import TextPreprocessor
 from src.components.legal_vectorizer import LegalVectorizer
@@ -104,12 +105,14 @@ from src.components.chromadb_client import ChromaDBClient
 from src.components.llm_client import LLMClient
 from src.components.session_manager import SessionManager
 from src.components.rag_engine import RAGEngine
+from src.components.navigation_links_store import NavigationLinksStore
 
 try:
     chat_chromadb_client = ChromaDBClient()
     chat_llm_client = LLMClient()
     chat_session_manager = SessionManager()
-    chat_rag_engine = RAGEngine(chat_chromadb_client, chat_llm_client)
+    nav_store = NavigationLinksStore(file_path=str(settings.NAVIGATION_LINKS_PATH))
+    chat_rag_engine = RAGEngine(chat_chromadb_client, chat_llm_client, navigation_store=nav_store)
     init_chat_components(chat_chromadb_client, chat_llm_client, chat_session_manager, chat_rag_engine)
     app.include_router(chat_router)
     logger.info("Chat/RAG components initialized successfully")

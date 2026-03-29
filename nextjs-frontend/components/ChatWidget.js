@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { getBackendUrl } from '../utils/api';
 
 export default function ChatWidget() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -115,6 +117,7 @@ export default function ChatWidget() {
           content: data.response,
           timestamp: new Date().toISOString(),
           sources: data.sources,
+          navigation_links: data.navigation_links,
         },
       ]);
     } catch {
@@ -294,6 +297,36 @@ export default function ChatWidget() {
                       <strong>Sources:</strong>
                       {msg.sources.map((s, j) => (
                         <div key={j} style={{ marginTop: '2px' }}>• {s.title || s.case_id}</div>
+                      ))}
+                    </div>
+                  )}
+                  {msg.navigation_links && msg.navigation_links.length > 0 && (
+                    <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {msg.navigation_links.map((link, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => router.push(link.route)}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            padding: '8px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid #667eea',
+                            background: 'linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%)',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            transition: 'background 0.2s',
+                          }}
+                          aria-label={`Navigate to ${link.page_name}`}
+                        >
+                          <span style={{ fontWeight: 600, color: '#667eea', fontSize: '13px' }}>
+                            {link.page_name}
+                          </span>
+                          <span style={{ fontSize: '11px', color: '#6b7280', marginTop: '2px' }}>
+                            {link.description}
+                          </span>
+                        </button>
                       ))}
                     </div>
                   )}
